@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
 <style>
-/* Layout: eine weiße Bühne wie eine DEC-Folie – Olivbalken unter dem Status und am rechten Rand, Logo unten rechts.
+/* Layout: eine weiße Bühne wie eine DEC-Folie – Olivbalken am rechten Rand, Logo unten rechts in der Bedienleiste.
    Bewusst nur helles Design (DEC Corporate Design, Logo ist schwarz auf weiß). */
 :root {
   --green: #A8B300; --green-dark: #6F7700; --gray: #6E6E6E; --light: #F4F4F4; --white: #FFFFFF; --black: #000000;
@@ -18,37 +18,37 @@
 html, body { height: 100%; }
 body { background: var(--white); color: var(--black); font-family: var(--font); font-weight: 300; font-size: 15px; margin: 0; }
 
-.stage { --state: var(--black); position: relative; min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column;
-  justify-content: center; gap: 1.5rem; padding: 6rem calc(clamp(16px, 5vw, 5rem) + 12px) 6rem clamp(16px, 5vw, 5rem); }
+.stage { --state: var(--black); position: relative; height: 100%; box-sizing: border-box; display: flex; flex-direction: column;
+  justify-content: center; gap: clamp(.6rem, 2.4vh, 1.5rem); overflow: hidden;
+  padding: clamp(1rem, 3vh, 2.5rem) calc(clamp(16px, 5vw, 5rem) + 12px) clamp(1rem, 3vh, 2.5rem) clamp(16px, 5vw, 5rem); }
 .stage::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 12px; background: var(--green); }
 .stage[data-state="warn"] { --state: var(--warn); }
 .stage[data-state="over"] { --state: var(--over); }
 .stage[data-state="paused"] { --state: var(--gray); }
 
-.wordmark { position: absolute; top: .4rem; left: calc(clamp(16px, 5vw, 5rem) - 1.6rem); width: 240px; max-width: 60%; height: auto; }
-.status { font-size: clamp(1.2rem, 2.4vw, 2rem); font-weight: 600; margin: 0; }
-.stage[data-state="over"] .status { color: var(--over); }
-.title-bar { width: min(100%, 22rem); height: 8px; background: var(--green); margin-top: .7rem; }
+/* Hinweis erscheint nur, wenn die Zeit abgelaufen ist; die Zeile hält ihren Platz, damit nichts springt */
+.notice { margin: 0; min-height: 1.3em; font-size: clamp(1.1rem, min(2.4vw, 3.6vh), 2rem); font-weight: 600; line-height: 1.3; color: var(--over); }
 
-.clock { font-weight: 600; line-height: 1; font-size: clamp(5rem, 24vw, 24rem); color: var(--state);
+.clock { font-weight: 600; line-height: 1; font-size: clamp(4rem, min(24vw, 38vh), 26rem); color: var(--state);
   transition: color .4s; white-space: nowrap; }
 .clock .d { display: inline-block; width: .64em; text-align: center; }
 .clock .s { display: inline-block; width: .3em; text-align: center; }
 .stage[data-state="over"] .clock { animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .45; } }
 
-.bar { height: 14px; background: var(--light); overflow: hidden; }
+.bar { flex: none; height: clamp(8px, 1.6vh, 14px); background: var(--light); overflow: hidden; }
 .bar-fill { height: 100%; width: 0; background: var(--green); transition: width .25s linear, background .4s; }
 .stage[data-state="warn"] .bar-fill { background: var(--warn); }
 .stage[data-state="over"] .bar-fill { background: var(--over); }
 
 .blocks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; max-width: 46rem; }
-.block { display: flex; flex-direction: column; align-items: flex-start; gap: .1rem; padding: .9rem 1.1rem; text-align: left; }
-.block b { font-size: clamp(1.6rem, 3.4vw, 2.4rem); font-weight: 600; line-height: 1; }
+.block { display: flex; flex-direction: column; align-items: flex-start; gap: .1rem; padding: clamp(.5rem, 1.6vh, .9rem) 1.1rem; text-align: left; }
+.block b { font-size: clamp(1.4rem, min(3.4vw, 5vh), 2.4rem); font-weight: 600; line-height: 1; }
 .block span { font-size: .8rem; color: var(--gray); }
 .block[aria-pressed="true"] { border-color: var(--green); box-shadow: inset 0 -6px 0 var(--green); }
 
-.controls, .row { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.controls { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.spacer { flex: 1 1 0; }
 button { font: inherit; font-weight: 400; cursor: pointer; border-radius: 6px; border: 1px solid var(--line);
   background: var(--white); color: var(--black); padding: .7rem 1rem; }
 button:hover { border-color: var(--gray); }
@@ -57,17 +57,14 @@ button:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 2px
 .primary:hover { border-color: var(--black); }
 .chip { padding: .45rem .85rem; border-radius: 999px; font-size: .85rem; }
 .chip[aria-pressed="true"] { background: var(--black); color: var(--white); border-color: var(--black); }
-.keys { font-size: .78rem; color: var(--gray); }
-kbd { font-family: var(--font); font-size: .72rem; font-weight: 600; padding: .05rem .35rem; border: 1px solid var(--line); border-radius: 4px; color: var(--black); }
 
-.logo-icon { position: absolute; right: calc(clamp(16px, 5vw, 5rem) + 12px); bottom: 1.2rem; height: 52px; width: auto; }
+.logo-icon { height: 48px; width: auto; }
 
-/* Vollbild: nur Uhr, Balken und Blöcke */
-:fullscreen .row, :fullscreen .keys { display: none; }
+/* Vollbild: Einstellungen ausblenden */
+:fullscreen .chip { display: none; }
 @media (max-width: 600px) {
   .blocks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .keys { display: none; }
-  .wordmark { width: 180px; }
+  .stage { height: auto; min-height: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .bar-fill, .clock { transition: none; }
@@ -79,11 +76,7 @@ kbd { font-family: var(--font); font-size: .72rem; font-weight: 600; padding: .0
 
 
 <main class="stage" id="stage" data-state="idle">
-  <img class="wordmark" src="dec-wortmarke.png" alt="Dehn Consulting – Iterate the next normal">
-  <div>
-    <p class="status" id="status">Bereit</p>
-    <div class="title-bar"></div>
-  </div>
+  <p class="notice" id="notice" aria-live="polite"></p>
   <div class="clock" id="clock" aria-live="off">10:00</div>
   <div class="bar" role="progressbar" aria-label="Verstrichene Zeit"><div class="bar-fill" id="barFill"></div></div>
 
@@ -94,16 +87,12 @@ kbd { font-family: var(--font); font-size: .72rem; font-weight: 600; padding: .0
     <button id="minusBtn" title="Eine Minute weniger (−)">−1 Min</button>
     <button id="plusBtn" title="Eine Minute mehr (+)">+1 Min</button>
     <button id="resetBtn" title="Neu starten (R)">Zurücksetzen</button>
-  </div>
-
-  <div class="row">
     <button class="chip" id="fsBtn" title="Vollbild (F)">Vollbild</button>
     <button class="chip" id="soundBtn" aria-pressed="true">Gong an</button>
     <button class="chip" id="testBtn">Ton testen</button>
-    <span class="keys"><kbd>Leertaste</kbd> Start/Pause · <kbd>1</kbd>–<kbd>4</kbd> Blöcke · <kbd>+</kbd>/<kbd>−</kbd> Minute · <kbd>R</kbd> Zurücksetzen · <kbd>F</kbd> Vollbild</span>
+    <span class="spacer"></span>
+    <img class="logo-icon" src="dec-logo.png" alt="DEC">
   </div>
-
-  <img class="logo-icon" src="dec-logo.png" alt="DEC">
 </main>
 
 <script>
@@ -185,8 +174,7 @@ kbd { font-family: var(--font); font-size: .72rem; font-weight: 600; padding: .0
 
     // Abgelaufen: Uhr bleibt auf 0:00, die überzogene Zeit steht im Status
     $("clock").innerHTML = digits(over ? "0:00" : fmt(r));
-    $("status").textContent = over ? `Zeit ist um · ${fmt(r)} überzogen`
-      : state === "paused" ? "Pausiert" : S.running ? `Läuft · ${S.min}-Minuten-Block` : "Bereit";
+    $("notice").textContent = over ? `Zeit ist um · ${fmt(r)} überzogen` : "";
     $("barFill").style.width = Math.max(0, Math.min(1, 1 - r / d)) * 100 + "%";
     $("startBtn").textContent = S.running ? "Pause" : (r < d ? "Fortsetzen" : "Start");
     [...$("blocks").children].forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.min) === S.min));
