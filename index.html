@@ -147,7 +147,7 @@ button:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 2px
     if (S.running) S.endAt += min * 60000; else S.remaining += min * 60000;
     const r = remainingNow(); S.rang = r <= 0; S.warned = r <= 60000; render();
   }
-  function pick(min) { S.min = min; store.set("min", min); reset(); start(); }
+  function pick(min) { S.min = min; store.set("min", min); reset(); }
 
   // ---- Anzeige ----
   function fmt(ms) {
@@ -184,7 +184,7 @@ button:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 2px
   // ---- Buttons & Tastatur ----
   BLOCKS.forEach((m, i) => {
     const b = document.createElement("button");
-    b.className = "block"; b.dataset.min = m; b.title = `${m} Minuten starten (${i + 1})`;
+    b.className = "block"; b.dataset.min = m; b.title = `${m} Minuten einstellen (${i + 1})`;
     b.innerHTML = `<b>${m}</b><span>Minuten</span>`;
     b.onclick = () => pick(m); $("blocks").appendChild(b);
   });
